@@ -4,6 +4,8 @@
     npm install craco-plugin-ts-paths
 
 ## Usage
+An example for usage can be seen [here|https://github.com/PanJoh/craco-plugin-ts-paths-sample]
+
 in your carco config import the following function
 
     const {createTypescriptPathsPlugin} = require('craco-plugin-ts-paths')
