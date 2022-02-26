@@ -1,6 +1,7 @@
 import { getLoaders, loaderByName } from '@craco/craco';
 import ModuleScopePlugin from 'react-dev-utils/ModuleScopePlugin';
-import { Configuration } from 'webpack'
+import ModuleScopePluginMod from './module-scope-plugin-mod';
+import { Configuration, ResolvePluginInstance } from 'webpack'
 const path = require('path');
 const fs = require('fs');
 
@@ -125,13 +126,19 @@ export function createTypescriptPathsPlugin(tsConfigPath: any) {
                     processLoaders(loaders, collectedPaths.absPaths);
                 }
 
-                const moduleScopePlugin: any = webpackConfig.resolve?.plugins?.find(plugin => plugin instanceof ModuleScopePlugin);
-                if (moduleScopePlugin) {
-                    moduleScopePlugin.appSrcs = [
-                        ...moduleScopePlugin.appSrcs,
-                        ...collectedPaths.absPaths,
-                    ];
-                }
+                const plugins = webpackConfig.resolve?.plugins?.map(plugin => 
+                    plugin instanceof ModuleScopePlugin 
+                        ? new ModuleScopePluginMod(plugin, collectedPaths.absPaths) as ResolvePluginInstance
+                        : plugin,
+                ) ?? [];
+
+                // const moduleScopePlugin: any = webpackConfig.resolve?.plugins?.find(plugin => plugin instanceof ModuleScopePlugin);
+                // if (moduleScopePlugin) {
+                //     moduleScopePlugin.appSrcs = [
+                //         ...moduleScopePlugin.appSrcs,
+                //         ...collectedPaths.absPaths,
+                //     ];
+                // }
                 
                 const resolve = webpackConfig.resolve ?? {}
                 const aliases = resolve.alias ?? {};
@@ -140,7 +147,8 @@ export function createTypescriptPathsPlugin(tsConfigPath: any) {
                     alias: {
                         ...aliases,
                         ...collectedPaths.paths,
-                    }
+                    },
+                    plugins,
                 }
 
                 return webpackConfig;
