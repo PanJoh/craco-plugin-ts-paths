@@ -21,15 +21,10 @@ function getBabelLoaders(webpackConfig: Configuration) {
     if (hasFoundAny) {
         return (matches as any[]).filter(match => {
             if (!testLoaderMatch(match)) {
-                return;
+                return false;        
             }
-            if (match.loader?.test != null) {
-                if (match.loader.test instanceof RegExp) {
-                    return match.loader.test.test('.ts') || match.loader.test.test('.tsx');
-                }
-            }
-
-            return false;
+            
+            return match.loader.test.test('.ts') || match.loader.test.test('.tsx');
         }) as LoaderMatch[];
     }
 
@@ -131,14 +126,6 @@ export function createTypescriptPathsPlugin(tsConfigPath: any) {
                         ? new ModuleScopePluginMod(plugin, collectedPaths.absPaths) as ResolvePluginInstance
                         : plugin,
                 ) ?? [];
-
-                // const moduleScopePlugin: any = webpackConfig.resolve?.plugins?.find(plugin => plugin instanceof ModuleScopePlugin);
-                // if (moduleScopePlugin) {
-                //     moduleScopePlugin.appSrcs = [
-                //         ...moduleScopePlugin.appSrcs,
-                //         ...collectedPaths.absPaths,
-                //     ];
-                // }
                 
                 const resolve = webpackConfig.resolve ?? {}
                 const aliases = resolve.alias ?? {};
