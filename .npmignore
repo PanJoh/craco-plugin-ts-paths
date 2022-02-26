@@ -1,0 +1,7 @@
+ci-cd/
+node_modules/
+src/
+tsconfig.json/
+.git/
+yarn-error.log
+yarn.lock
