@@ -1,6 +1,6 @@
 {
   "name": "craco-plugin-ts-paths",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "plugin to add typescript paths to react craco project",
   "main": "dist/index.js",
   "author": "johannespandis@gmail.com",
